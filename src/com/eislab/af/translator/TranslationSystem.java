@@ -23,6 +23,8 @@
 package com.eislab.af.translator;
 
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -44,7 +46,19 @@ public class TranslationSystem {
 	
 	public static void main(String[] args)  {
 		
-        
+
+        Pattern p = Pattern.compile("^.*\\s+from\\s+::\\s+via.*\\sdev\\s+.*\\s+src\\s+((?:[:]{1,2}|[0-9|a|b|c|d|e|f]{1,4})+)\\s+metric\\s+\\d+$");
+String test = "fdfd:55::80ff from :: via fdfd:55::80ff dev usb0  src fdfd:55::80fe  metric 0";
+
+Matcher match = p.matcher(test);
+if (match.matches()) {
+	System.out.println("matches!!");
+	String address = match.group(1);
+    System.out.println("match found. address = " + address);
+    //routes.add(new RouteInfo(address, (short)0, (short)0, (short)0));//metric is always 0, because we do not extract it from the ifconfig command.
+}
+		
+		
 //		loadProperties("translator.properties");
 				
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);

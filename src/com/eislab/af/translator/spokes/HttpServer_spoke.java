@@ -25,8 +25,12 @@ package com.eislab.af.translator.spokes;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.Inet6Address;
 import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
 import java.nio.charset.Charset;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -71,6 +75,7 @@ import org.apache.http.util.EntityUtils;
 import org.eclipse.californium.core.network.config.NetworkConfig;
 
 import com.eislab.af.translator.data.BaseContext;
+import com.google.common.net.InetAddresses;
 
 public class HttpServer_spoke implements BaseSpokeProvider {
 
@@ -179,6 +184,8 @@ public class HttpServer_spoke implements BaseSpokeProvider {
 			// Create server-side I/O reactor
 			ioReactor = new DefaultListeningIOReactor();
 			// Listen of the given port
+			
+			
 			InetSocketAddress socketAddress = new InetSocketAddress(ipaddress, 0);
 			ListenerEndpoint endpoint1 = ioReactor.listen(socketAddress);
 			        

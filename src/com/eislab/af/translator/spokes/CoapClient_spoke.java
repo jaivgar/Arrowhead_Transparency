@@ -83,6 +83,9 @@ public class CoapClient_spoke implements BaseSpokeConsumer {
 		
 		@Override
 		public void run() {
+			if(serviceAddress.endsWith("/") && context.getPath().startsWith("/")) {
+				context.setPath(context.getPath().substring(1));
+			}
 			CoapClient client = new CoapClient(serviceAddress + context.getPath());
 			
 			CoapResponse response = null;

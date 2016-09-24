@@ -118,13 +118,23 @@ public class TranslatorService implements Observer {
 			int id = hub.getId();
 			
 			hub.setFingerprint(fingerprint);
+			int error = 0;
+			try {
+				hub.online();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				error = 1;
+			}
 			
-			hub.online();
-			
-			hubs.put(fingerprint, hub);
-			
-			//response = Response.ok("<translatorId>newtranslator=" + id + "</translatorId><translatorAddress>"+ hub.getPSpokeAddress() +"</translatorAddress>").build();
-			response = Response.ok("<translationendpoint><id>" + id + "</id><ip>"+ hub.getPSpokeIp() +"</ip><port>"+ hub.getPSpokePort() +"</port></translationendpoint>").build();
+			if(error==0) {
+				hubs.put(fingerprint, hub);
+				
+				//response = Response.ok("<translatorId>newtranslator=" + id + "</translatorId><translatorAddress>"+ hub.getPSpokeAddress() +"</translatorAddress>").build();
+				response = Response.ok("<translationendpoint><id>" + id + "</id><ip>"+ hub.getPSpokeIp() +"</ip><port>"+ hub.getPSpokePort() +"</port></translationendpoint>").build();
+			} else {
+				response = Response.serverError().build();
+			}
 		}
 		return response;
 	
