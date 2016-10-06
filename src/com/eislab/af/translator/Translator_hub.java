@@ -230,6 +230,12 @@ public class Translator_hub extends Observable {//implements Runnable {
 	
 	private static String findOutgoingIpV6GivenAddress(String remoteIP) throws Exception {
 
+    	System.out.println("remoteIP: " + remoteIP);
+		if (remoteIP.startsWith("[")) {
+			remoteIP = remoteIP.substring(1, remoteIP.length()-1);
+	    	System.out.println("remoteIP: " + remoteIP);
+		}
+		
         if(System.getProperty("os.name").contains("Windows")) {
 			NetworkInterface networkInterface;
 			
@@ -320,8 +326,8 @@ public class Translator_hub extends Observable {//implements Runnable {
 		        /* examples:
 		         * fdfd:55::98ac from :: via fdfd:55::98ac dev usb0  src fdfd:55::80fe  metric 0
 		        */
-		        Pattern p = Pattern.compile("^.*\\s+from\\s+::\\s+via.*\\sdev\\s+.*\\s+src\\s+((?:[:]{1,2}|[0-9|a|b|c|d|e|f]{1,4})+)\\s+metric\\s+\\d+$");
-String test = "fdfd:55::80ff from :: via fdfd:55::80ff dev usb0  src fdfd:55::80fe  metric 0";
+		        Pattern p = Pattern.compile("^.*\\s+from\\s+::\\s+via.*\\sdev\\s+.*\\s+src\\s+((?:[:]{1,2}|[0-9|a|b|c|d|e|f]{1,4})+)\\s+metric\\s+\\d+.*");
+		        //String test = "fdfd:55::80ff from :: via fdfd:55::80ff dev usb0  src fdfd:55::80fe  metric 0";
 		        while ((line = reader.readLine()) != null) {
 		        	System.out.println("result of command = " + line);
 		            Matcher match = p.matcher(line);
@@ -473,7 +479,7 @@ String test = "fdfd:55::80ff from :: via fdfd:55::80ff dev usb0  src fdfd:55::80
     }
 	
 	public Translator_hub(Observer observer) {
-		loadProperties("translator.properties");
+		//loadProperties("translator.properties");
 		this.addObserver(observer);
 		
 		
@@ -711,7 +717,7 @@ String test = "fdfd:55::80ff from :: via fdfd:55::80ff dev usb0  src fdfd:55::80
 		} catch (IOException e) {
 			//LOG.severe("Failed to read property file " + fileName + ". Reason: " + e.getMessage());
 			System.out.println("Failed to read property file " + fileName + ". Reason: " + e.getMessage());
-			System.exit(-1);
+			//System.exit(-1);
 		}
 		return result;
 	}

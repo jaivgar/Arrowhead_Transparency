@@ -210,7 +210,13 @@ public class HttpServer_spoke implements BaseSpokeProvider {
 			
 
 			endpoint1.waitFor();
-
+			
+			if(address.contains(":")) {
+				if(!address.startsWith("[")) {
+					address = "[" + address + "]";
+				}
+			}
+			
 			address = address + ":" + Integer.toString(((InetSocketAddress) endpoint1.getAddress()).getPort()) + "/";
 			System.out.println(address);
 			
