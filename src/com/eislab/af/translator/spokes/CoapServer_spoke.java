@@ -56,6 +56,7 @@ public class CoapServer_spoke extends CoapServer implements BaseSpokeProvider{
 		super();
 		
 		InetSocketAddress socketAddress = new InetSocketAddress(ipaddress, 0);
+		this.interfaceAddress = ipaddress;
 		
 		this.addEndpoint(new CoAPEndpoint(socketAddress));
 		this.start();
@@ -102,7 +103,6 @@ public class CoapServer_spoke extends CoapServer implements BaseSpokeProvider{
 			context.setMethod(method);
 			
 			//context.setContentType(exchange.getRequest().getOptions().getContentFormat());
-			
 			
 			nextSpoke.in(context);
 			

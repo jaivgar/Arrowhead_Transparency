@@ -110,7 +110,7 @@ public class Translator_hub extends Observable {//implements Runnable {
 					e.printStackTrace();
 				}
 				
-				if ( (cSpoke.getLastActivity() > 0) || (pSpoke.getLastActivity() > 0) ){
+				if ( (cSpoke.getLastActivity() > 0) || (pSpoke.getLastActivity() > 0) ) {
 					cSpoke.clearActivity();
 					pSpoke.clearActivity();
 					counter = 0;
@@ -163,16 +163,19 @@ public class Translator_hub extends Observable {//implements Runnable {
 		                String address = match.group(3);
 		                short maskLength = 0;
 		                boolean networkMatch = network.contentEquals("0.0.0.0");
+		                
 		                if (!networkMatch) {
 		                    SubnetUtils subnet = new SubnetUtils(network, mask);
 		                    SubnetUtils.SubnetInfo info = subnet.getInfo();
 		                    networkMatch = info.isInRange(remoteIP);
 		                    maskLength = Short.valueOf(info.getCidrSignature().split("/")[1]);
 		                }
+		                
 		                if (networkMatch) {
 		                    short metric = Short.valueOf(match.group(4));
 		                    routes.add(new RouteInfo(address, (short)0, maskLength, metric));
 		                }
+		                
 		            }
 		        }
 		        Collections.sort(routes);
@@ -525,7 +528,8 @@ public class Translator_hub extends Observable {//implements Runnable {
 				//HttpServer_spoke httpserver = new HttpServer_spoke(translationPort, translationPath);
 				//pSpoke = new HttpServer_spoke(properties.getProperty("translator.interface.ipaddress"), "/*");
 				pSpoke = new HttpServer_spoke(source, "/*");
-			}  else if (pSpoke_ConsumerType.contains("ua")) {
+//			}  else if (pSpoke_ConsumerType.contains("ua")) {
+			}  else if (pSpoke_ConsumerType.contains("opc")) {
 				//pSpoke = new UaServer_spoke(properties.getProperty("translator.interface.ipaddress"), "/*");
 				pSpoke = new UaServer_spoke(source, "/*");
 			} else if (pSpoke_ConsumerType.contains("mqtt")) {
@@ -547,7 +551,8 @@ public class Translator_hub extends Observable {//implements Runnable {
 			} else if(cSpoke_ProviderType.contains("mqtt")) {
 //				String brokerUri = "tcp://localhost:1883";//TODO: get these values from ORCHESTRaTOR OR METADATA
 				cSpoke = new MqttClient_spoke(cSpoke_ProviderAddress);
-			} else if(cSpoke_ProviderType.contains("ua")) {
+//			} else if(cSpoke_ProviderType.contains("ua")) {
+			} else if(cSpoke_ProviderType.contains("opc")) {
 				cSpoke = new UaClient_spoke(cSpoke_ProviderAddress);
 			} else {
 				System.exit(1);
