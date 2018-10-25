@@ -204,10 +204,20 @@ public class Translator_hub extends Observable {//implements Runnable {
 
 		        System.out.println(System.getProperty("os.name"));
 		        String line;
-		        /* examples:
+		        /* Original examples:
 		         * 10.10.2.130 via 10.0.2.2 dev eth0  src 10.0.2.255
-		        */
-		        Pattern p = Pattern.compile("^.*via.*\\s+dev\\s+.*\\s+src\\s((?:[0-9|\\.]{1,3})+)");
+		         * Original pattern:
+		         * Pattern p = Pattern.compile("^.*via.*\\s+dev\\s+.*\\s+src\\s((?:[0-9|\\.]{1,3})+)");
+		         *
+		         * New example:
+		         * 10.10.2.130 via 130.240.172.1 dev wlp58s0 src 130.240.174.24 uid 1000
+		         * Fail to match due to the end "uid 1000"
+		         * New pattern:
+		         * Pattern p = Pattern.compile("^.*via.*\\s+dev\\s+.*\\s+src\\s((?:[0-9|\\.]{1,3})+).*");
+		         *
+		         * New pattern (with localhost):
+		         */
+		        Pattern p = Pattern.compile("^.*dev\\s+.*\\s+src\\s((?:[0-9|\\.]{1,3})+).*");
 
 		        while ((line = reader.readLine()) != null) {
 		            Matcher match = p.matcher(line);
