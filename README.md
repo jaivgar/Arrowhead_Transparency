@@ -10,12 +10,12 @@ POST http://[fdfd:55::80ff]:8000/translator
 Content-Type: application/xml
 ```xml
 <translatorSetup>
-<providerName>coap</providerName>
-<providerType>coap</providerType>
-<providerAddress>coap://[fdfd::01]:5683</providerAddress>
-<consumerName>http</consumerName>
-<consumerType>http</consumerType>
-<consumerAddress>http</consumerAddress>
+<providerName>http</providerName>
+<providerType>http</providerType>
+<providerAddress>http://127.0.0.1:7000</providerAddress>
+<consumerName>coap</consumerName>
+<consumerType>coap</consumerType>
+<consumerAddress>127.0.0.1</consumerAddress>
 </translatorSetup>
 ```
  -- response --
