@@ -67,14 +67,21 @@ public class TranslatorService implements Observer {
 //		setup.setProviderName("providerName");
 //		response = Response.ok(setup).build();
 		
-		Map<Integer,String> hubResponse = new HashMap<Integer,String>();
-
-		for (Entry<Integer, Translator_hub> entry : hubs.entrySet()) {
-			hubResponse.put(entry.getKey(), entry.getValue().getPSpokeAddress());
+		//Map<Integer,String> hubResponse = new HashMap<Integer,String>(); // No need of Map as we can not build automatically the response
+		String hubResponse = "<translatorList>";
+		if (hubs.isEmpty()) {
+			hubResponse += "null";
 		}
+		else {
+			hubResponse += "\n";
+			for (Entry<Integer, Translator_hub> entry : hubs.entrySet()) {
+				//hubResponse.put(entry.getKey(), entry.getValue().getPSpokeAddress());
+				hubResponse += "<translatorId>" + entry.getKey() + "</translatorId><translatorAddress>" + entry.getValue().getPSpokeAddress()+"</translatorAddress>+\n";
+			}
+		}
+		hubResponse +="</translatorList>";
 		
-		response = Response.ok(hubResponse).build();
-		
+		response = Response.ok(hubResponse).build();// No need to specify XML Mediatype as the runtime will set it with @Produces
 		return response;
 	
 	}
@@ -130,6 +137,9 @@ public class TranslatorService implements Observer {
 			if(error==0) {
 				hubs.put(fingerprint, hub);
 				
+				/*
+				 * Why send "id" if in the getTranslator, arg translatorid, what it used is the "fingerprint"
+				 */
 				//response = Response.ok("<translatorId>newtranslator=" + id + "</translatorId><translatorAddress>"+ hub.getPSpokeAddress() +"</translatorAddress>").build();
 				response = Response.ok("<translationendpoint><id>" + id + "</id><ip>"+ hub.getPSpokeIp() +"</ip><port>"+ hub.getPSpokePort() +"</port></translationendpoint>").build();
 			} else {
@@ -147,7 +157,7 @@ public class TranslatorService implements Observer {
 		Response response;
 		Translator_hub hub = null;
 		
-		hub = hubs.get(translatorid);
+		hub = hubs.get(translatorid); // translatorid is the fingerprint stored when creating hub, which user never receives!
 		
 		if(hub != null) {	
 			response = Response.ok("<translatorId>" + translatorid + "</translatorId><translatorAddress>"+ hub.getPSpokeAddress() +"</translatorAddress>").build();

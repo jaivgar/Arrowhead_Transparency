@@ -96,6 +96,7 @@ public class TranslationSystem {
 		
 	}
 
+	// This function is not commented in file Translator_hub.java
 	/** 
 	 * Reads the properties from the file .properties
 	 *

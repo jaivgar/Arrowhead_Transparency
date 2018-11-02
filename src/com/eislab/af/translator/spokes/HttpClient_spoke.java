@@ -110,11 +110,12 @@ public class HttpClient_spoke implements BaseSpokeConsumer {
 				if(payloadExpected) {
 					// 
 					// create the content
+					conn.setDoOutput(true);
+					conn.setRequestProperty("content-type", "application/xml");
 					OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
 					writer.write(this.context.getContent());
 					writer.flush();
 
-					conn.setRequestProperty("content-type", "application/xml");
 										
 				}
 				
