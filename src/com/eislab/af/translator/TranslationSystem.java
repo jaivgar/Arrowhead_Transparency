@@ -32,34 +32,19 @@ import org.eclipse.jetty.servlet.ServletHolder;
 
 public class TranslationSystem {
 
+	//XXX: This is how to write bugs
+	
 	// >> Entry point of system
 	// 1) Start translator service thread
 	// 3) Monitoring and reporting?
-	
-	//static Translator_hub hub;
-	
+		
 	/* Producer values */
 	public static String EndpointPrefix = "/";
 	public static int port = 8000;
-	public static Properties properties;
+	//XXX: public static Properties properties; What are properties used for? Method in translator_hub.java
 	
 	
 	public static void main(String[] args)  {
-		
-
-        //Pattern p = Pattern.compile("^.*\\s+from\\s+::\\s+via.*\\sdev\\s+.*\\s+src\\s+((?:[:]{1,2}|[0-9|a|b|c|d|e|f]{1,4})+)\\s+metric\\s+\\d+$");
-		Pattern p = Pattern.compile("^.*\\s+from\\s+::\\s+via.*\\sdev\\s+.*\\s+src\\s+((?:[:]{1,2}|[0-9|a|b|c|d|e|f]{1,4})+)\\s+metric\\s+\\d+.*$");
-		//String test = "fdfd:55::80ff from :: via fdfd:55::80ff dev usb0  src fdfd:55::80fe  metric 0";
-        String test = "fdfe::1:0 from :: via fdfe::1:0 dev ovpn-bbb  src fdfe::1  metric 0 ";
-
-		Matcher match = p.matcher(test);
-		if (match.matches()) {
-			System.out.println("matches!!");
-			String address = match.group(1);
-		    System.out.println("match found. address = " + address);
-		    //routes.add(new RouteInfo(address, (short)0, (short)0, (short)0));//metric is always 0, because we do not extract it from the ifconfig command.
-		}
-		
 		
 //		loadProperties("translator.properties");
 				
@@ -102,21 +87,6 @@ public class TranslationSystem {
 	 *
 	 */
 //	private static boolean loadProperties(String systemName) {
-//		boolean result = false;
-//		/* Setting up Globals */
-//		String fileName = systemName + ".properties";
-//		
-//		/* Read the input properties file and set the properties */
-//		try {
-//			Properties props = new Properties();
-//			props.load(new FileInputStream(fileName));
-//			properties = props;
-//			result = true;
-//		} catch (IOException e) {
-//			//LOG.severe("Failed to read property file " + fileName + ". Reason: " + e.getMessage());
-//			System.exit(-1);
-//		}
-//		return result;
 //	}
 
 	

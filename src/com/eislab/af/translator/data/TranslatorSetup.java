@@ -71,6 +71,4 @@ public class TranslatorSetup {
 		this.consumerAddress = consumerAddress;
 	}
 
-//	<[Mandatory]Target Service Provider name=”string” address=”string” />
-//    <[Mandatory]Target Service Consumer name=”string” address=”string” />
 }

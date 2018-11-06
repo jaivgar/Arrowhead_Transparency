@@ -57,17 +57,12 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.net.util.SubnetUtils;
 
-interface Translator_hub_i {
-	void writeToConsole(String msg);
-}
 
 public class Translator_hub extends Observable {//implements Runnable {
 
-	private int id = 0;	
-
 	public static Properties properties;
 	public boolean noactivity = false;
-	private int fingerprint = 0;
+	private int translatorId = 0;
 	
 	BaseSpokeProvider pSpoke;
 	private String  pSpoke_ConsumerName = null;
@@ -81,15 +76,19 @@ public class Translator_hub extends Observable {//implements Runnable {
 	BaseSpokeConsumer cSpoke;
 	private String  cSpoke_ProviderName = null;
 	private String  cSpoke_ProviderType = null;
-	//private String  cSpoke_ProviderAddress = null;
-	private String 	cSpoke_ProviderAddress;// 	= "coap://127.0.0.1:5692/";
-	private String  cSpoke_ProviderPath;
+	private String  cSpoke_ProviderAddress = null;
+//	private String  cSpoke_ProviderPath;
 	
-	public Translator_hub(String StubConfiguration)	{
-		//this();
+	public Translator_hub(Observer observer) {
+		//loadProperties("translator.properties");
+		this.addObserver(observer);	
+		
+		SpokeActivityMonitor activityMonitor = new SpokeActivityMonitor();
+		new Thread(activityMonitor).start();
 		
 	}
 	
+
 	class SpokeActivityMonitor implements Runnable {
 		
 		int counter = 0;
@@ -114,24 +113,20 @@ public class Translator_hub extends Observable {//implements Runnable {
 					cSpoke.clearActivity();
 					pSpoke.clearActivity();
 					counter = 0;
-				} else if (counter < 1){
-					counter++;
-				} else {
-					noactivity = true;//request translation service to release reference to the hub.
+				} else if (counter < 1){// else if (activity grace period not over)
+					counter++;//count missed activity
+				} else {// close the hub and remove from list in translator service
+					noactivity = true;
 					
 					pSpoke.close();
 					cSpoke.close();
 					
+					//request translation service to release reference to the hub.
 					Translator_hub.this.setChanged();
-					Translator_hub.this.notifyObservers(Translator_hub.this.getFingerprint());
+					Translator_hub.this.notifyObservers(Translator_hub.this.getTranslatorId());
 					
 					return;
 				}
-				// else if (activity grace period not over)
-					//count missed activity
-				// else
-					// close the hub and remove from list in translator service
-				
 			}
 		}
 	}
@@ -215,7 +210,7 @@ public class Translator_hub extends Observable {//implements Runnable {
 		         * New pattern:
 		         * Pattern p = Pattern.compile("^.*via.*\\s+dev\\s+.*\\s+src\\s((?:[0-9|\\.]{1,3})+).*");
 		         *
-		         * New pattern (with localhost):
+		         * New pattern works with the absolut address of own computer:
 		         */
 		        Pattern p = Pattern.compile("^.*dev\\s+.*\\s+src\\s((?:[0-9|\\.]{1,3})+).*");
 
@@ -491,30 +486,12 @@ public class Translator_hub extends Observable {//implements Runnable {
         }
     }
 	
-	public Translator_hub(Observer observer) {
-		//loadProperties("translator.properties");
-		this.addObserver(observer);
-		
-		
-		
-		SpokeActivityMonitor activityMonitor = new SpokeActivityMonitor();
-		new Thread(activityMonitor).start();
-		
-	}
-	
 	
 	// spoke is responsible for translating from protocol specific domain to a generic domain
 	// hub is used for chaining spokes in series.
 	// the chain must start with a baseprovider and finish with a baseconsumer
 	// each spoke in the chain has a generic interface
 	
-	public void closeProvider(String msg) {
-		pSpoke.close();
-	}
-	
-	public void closeConsumer(String msg) {
-		cSpoke.close();
-	}
 	
 	public void online() throws Exception {
 		//find the network interface or the ipaddress (IPv4)
@@ -589,21 +566,12 @@ public class Translator_hub extends Observable {//implements Runnable {
 		}
 	}
 
-	
-	public int getId() {
-		if (id == 0) {
-			id = (int) (Math.random() * 100000);
-		}
-		return id;
+	public int getTranslatorId() {
+		return translatorId;
 	}
 
-
-	public int getFingerprint() {
-		return fingerprint;
-	}
-
-	public void setFingerprint(int fingerprint) {
-		this.fingerprint = fingerprint;
+	public void setTranslatorId(int translatorId) {
+		this.translatorId = translatorId;
 	}
 
 	public String getPSpoke_ConsumerName() {
@@ -690,14 +658,6 @@ public class Translator_hub extends Observable {//implements Runnable {
 		this.cSpoke_ProviderAddress = cSpoke_ProviderAddress;
 	}
 	
-	public String getpSpoke_ConsumerType() {
-		return pSpoke_ConsumerType;
-	}
-
-	public void setpSpoke_ConsumerType(String pSpoke_ConsumerType) {
-		this.pSpoke_ConsumerType = pSpoke_ConsumerType;
-	}
-
 	public String getpSpoke_ConsumerAddress() {
 		return pSpoke_ConsumerAddress;
 	}
@@ -705,13 +665,29 @@ public class Translator_hub extends Observable {//implements Runnable {
 	public void setpSpoke_ConsumerAddress(String pSpoke_ConsumerAddress) {
 		this.pSpoke_ConsumerAddress = pSpoke_ConsumerAddress;
 	}
-
+	
 	public String getcSpoke_ProviderType() {
 		return cSpoke_ProviderType;
 	}
 
 	public void setcSpoke_ProviderType(String cSpoke_ProviderType) {
 		this.cSpoke_ProviderType = cSpoke_ProviderType;
+	}
+	
+	public String getpSpoke_ConsumerType() {
+		return pSpoke_ConsumerType;
+	}
+
+	public void setpSpoke_ConsumerType(String pSpoke_ConsumerType) {
+		this.pSpoke_ConsumerType = pSpoke_ConsumerType;
+	}
+	
+	public void closeProvider(String msg) {
+		pSpoke.close();
+	}
+	
+	public void closeConsumer(String msg) {
+		cSpoke.close();
 	}
 
 	/** 
