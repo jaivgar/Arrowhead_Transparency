@@ -30,18 +30,20 @@ Server:  Jetty(9.1.0.M0)
 Example to obtain all translations actives:
 
 GET http://localhost:8000/translator
-Content-Type: application/xml
-```xml
-<translatorList>
-    <translatorId>-14076</translatorId>
-    <translatorAddress>coap://130.240.172.50:64736/</translatorAddress>+
-</translatorList>
-```
+
  -- response --
 200 OK
 Content-Type:  application/xml
 Content-Length:  142
 Server:  Jetty(9.1.0.M0)
+
+Content-Type: application/xml
+```xml
+<translatorList>
+    <translatorId>-14076</translatorId>
+    <translatorAddress>coap://130.240.172.50:64736/</translatorAddress>
+</translatorList>
+```
 
 Tested on localhost. For providerAddress and consumerAddress an absolut path is necessary
 
